@@ -1,7 +1,7 @@
 go-id-cipher
 =========
 
-user RC4 cipher a integer to another integer
+use RC4 cipher a integer to another integer
 
 
 example
