@@ -50,7 +50,8 @@ func Decrypt(i int, k string) int {
 }
 
 func xor(src []byte, k []byte, bits int) []byte {
-	s := append(src[:bits], bytes.Repeat([]byte{0}, bits-len(src))...)
+	s := append(src, bytes.Repeat([]byte{0}, 64)...)
+	s = s[:bits]
 	c, err := rc4.NewCipher(k)
 	if err != nil {
 		panic(err)
