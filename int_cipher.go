@@ -68,15 +68,8 @@ func int2bytes(a int) []byte {
 	return buf.Bytes()
 }
 
-func bytes2int(b []byte) int {
-	//n := 0
-	//m := len(b)
-	//for i := 0; i < m; i++ {
-	//n += int(b[i]) << uint((m-i-1)*8)
-	//}
-	//return n
-	var i int
+func bytes2int(b []byte) (i int) {
 	buf := bytes.NewBuffer(b)
 	binary.Read(buf, binary.BigEndian, &i)
-	return i
+	return
 }
