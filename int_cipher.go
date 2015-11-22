@@ -1,76 +1,76 @@
 package int_cipher
 
 import (
-	"bytes"
 	"crypto/rc4"
-	"encoding/binary"
 )
 
-func Encrypt8(i int8, k string) int8 {
-	out := xor(int2bytes(int(i)), []byte(k), 1)
-	return int8(bytes2int(out))
+func Encrypt8(i uint8, k string) uint8 {
+	out := xor(int2bytes(uint(i), 1), []byte(k))
+	return uint8(bytes2int(out))
 }
 
-func Encrypt16(i int16, k string) int16 {
-	out := xor(int2bytes(int(i)), []byte(k), 2)
-	return int16(bytes2int(out))
+func Encrypt16(i uint16, k string) uint16 {
+	out := xor(int2bytes(uint(i), 2), []byte(k))
+	return uint16(bytes2int(out))
 }
 
-func Encrypt32(i int32, k string) int32 {
-	out := xor(int2bytes(int(i)), []byte(k), 4)
-	return int32(bytes2int(out))
+func Encrypt32(i uint32, k string) uint32 {
+	out := xor(int2bytes(uint(i), 4), []byte(k))
+	return uint32(bytes2int(out))
 }
-func Encrypt64(i int, k string) int64 {
-	out := xor(int2bytes(int(i)), []byte(k), 8)
-	return int64(bytes2int(out))
-}
-
-func Encrypt(i int, k string) int {
-	n := Encrypt64(i, k)
-	return int(n)
+func Encrypt64(i uint, k string) uint64 {
+	out := xor(int2bytes(uint(i), 8), []byte(k))
+	return uint64(bytes2int(out))
 }
 
-func Decrypt8(i int8, k string) int8 {
+func Encrypt(i uint, k string) uint32 {
+	return uint32(Encrypt32(uint32(i), k))
+}
+
+func Decrypt8(i uint8, k string) uint8 {
 	return Encrypt8(i, k)
 }
 
-func Decrypt16(i int16, k string) int16 {
+func Decrypt16(i uint16, k string) uint16 {
 	return Encrypt16(i, k)
 }
 
-func Decrypt32(i int32, k string) int32 {
+func Decrypt32(i uint32, k string) uint32 {
 	return Encrypt32(i, k)
 }
-func Decrypt64(i int, k string) int64 {
+func Decrypt64(i uint, k string) uint64 {
 	return Encrypt64(i, k)
 }
 
-func Decrypt(i int, k string) int {
+func Decrypt(i uint, k string) uint32 {
 	return Encrypt(i, k)
 }
 
-func xor(src []byte, k []byte, bits int) []byte {
-	s := append(src, bytes.Repeat([]byte{0}, 64)...)
-	s = s[:bits]
+func xor(src []byte, k []byte) []byte {
+	s := src
 	c, err := rc4.NewCipher(k)
 	if err != nil {
 		panic(err)
 	}
-
 	out := make([]byte, len(s))
 	c.XORKeyStream(out, s)
-
 	return out
 }
 
-func int2bytes(a int) []byte {
-	buf := bytes.NewBuffer([]byte{})
-	binary.Write(buf, binary.BigEndian, a)
-	return buf.Bytes()
+func int2bytes(a uint, bits int) []byte {
+	b := make([]byte, bits)
+	for i := 0; i < bits; i++ {
+		b[bits-i-1] = byte(a & 0xff)
+		a = a >> 8
+	}
+	return b
 }
 
-func bytes2int(b []byte) (i int) {
-	buf := bytes.NewBuffer(b)
-	binary.Read(buf, binary.BigEndian, &i)
-	return
+func bytes2int(b []byte) uint {
+	n := uint(0)
+	m := len(b)
+	for i := 0; i < m; i++ {
+		n += uint(b[i]) << (uint(m-i-1) * 8)
+	}
+	return n
 }
