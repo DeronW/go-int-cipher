@@ -3,19 +3,23 @@ go-id-cipher
 
 use RC4 cipher a integer to another integer
 
-
-example
+usage
 ------
 
+in console use this to install lib
+
 >
-    import "github.com/delongw/go-id-cipher"
+    go get github.com/delongw/go-int-cipher
+    
+and then, import it from source
 
-    id_cipher.Encrypt(1, "this is key")
+>
+    import "github.com/delongw/go-int-cipher"
+    
+use it with a private key, ** 1 < len(key) < 256 ** 
 
-    id_cipher.Encrypt8(1, "this is key")
+    a := int_cipher.Encrypt(1, "this is key") // a is 2554174457
+    b := int_cipher.Decrypt(2554174457, "this is key") // b is 1
 
-    id_cipher.Encrypt16(1, "this is key")
-
-    id_cipher.Encrypt32(1, "this is key")
-
-    id_cipher.Encrypt64(1, "this is key")
+    c := int_cipher.Encrypt8(1, "this is key") // c is 153
+    d := int_cipher.Encrypt8(153, "this is key") // d is 1
